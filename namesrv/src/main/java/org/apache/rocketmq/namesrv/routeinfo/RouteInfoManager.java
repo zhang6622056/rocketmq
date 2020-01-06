@@ -45,15 +45,42 @@ import org.apache.rocketmq.common.protocol.route.TopicRouteData;
 import org.apache.rocketmq.common.sysflag.TopicSysFlag;
 import org.apache.rocketmq.remoting.common.RemotingUtil;
 
+
+
+/***
+ *
+ * 保存集群状态
+ * @author Nero
+ * @date 2020-01-06
+ * *@param: null
+ * @return 
+ */
 public class RouteInfoManager {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
     private final static long BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
+
+
+    //- 缓存集群状态 topic对应的broker list
     private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
+
+    //- brokerName对应的broker信息
     private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
+
+    //- 集群名，对应的broker名集合
     private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;
+
+    //-BrokerLiveInfo 为某台broker机器的实时状态
     private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
+
+    //- 存储broker机器单位的过滤服务器地址
     private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
+
+
+
+
+
 
     public RouteInfoManager() {
         this.topicQueueTable = new HashMap<String, List<QueueData>>(1024);
@@ -426,6 +453,17 @@ public class RouteInfoManager {
         return null;
     }
 
+    
+    
+    
+    /**
+     *
+     * 扫描不再活跃的broker
+     * @author Nero
+     * @date 2020-01-06
+     * @param:
+     * @return void
+     */
     public void scanNotActiveBroker() {
         Iterator<Entry<String, BrokerLiveInfo>> it = this.brokerLiveTable.entrySet().iterator();
         while (it.hasNext()) {
@@ -440,6 +478,18 @@ public class RouteInfoManager {
         }
     }
 
+
+
+
+    /***
+     *
+     * 遍历获取对应的broker，然后从nameserver中清除出去
+     * @author Nero
+     * @date 2020-01-06
+     * @param: remoteAddr
+     * @param: channel
+     * @return void
+     */
     public void onChannelDestroy(String remoteAddr, Channel channel) {
         String brokerAddrFound = null;
         if (channel != null) {
@@ -753,7 +803,9 @@ public class RouteInfoManager {
 }
 
 class BrokerLiveInfo {
+    //- 最后一次更新的时间戳,被定期检查，无效判定标示字段
     private long lastUpdateTimestamp;
+    //-
     private DataVersion dataVersion;
     private Channel channel;
     private String haServerAddr;

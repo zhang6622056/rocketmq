@@ -84,6 +84,8 @@ public class NamesrvController {
 
         this.registerProcessor();
 
+
+        //- 每隔10s 扫描一下是否有broker过期未上报
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -92,6 +94,11 @@ public class NamesrvController {
             }
         }, 5, 10, TimeUnit.SECONDS);
 
+
+
+
+
+
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -99,6 +106,11 @@ public class NamesrvController {
                 NamesrvController.this.kvConfigManager.printAllPeriodically();
             }
         }, 1, 10, TimeUnit.MINUTES);
+
+
+
+
+
 
         if (TlsSystemConfig.tlsMode != TlsMode.DISABLED) {
             // Register a listener to reload SslContext

@@ -23,6 +23,19 @@ import org.apache.rocketmq.logging.InternalLoggerFactory;
 import org.apache.rocketmq.namesrv.NamesrvController;
 import org.apache.rocketmq.remoting.ChannelEventListener;
 
+
+
+
+
+
+/***
+ *
+ * 用于broker 与nameserver的状态同步
+ * @author Nero
+ * @date 2020-01-06
+ * *@param: null
+ * @return 
+ */
 public class BrokerHousekeepingService implements ChannelEventListener {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
     private final NamesrvController namesrvController;
@@ -45,6 +58,9 @@ public class BrokerHousekeepingService implements ChannelEventListener {
         this.namesrvController.getRouteInfoManager().onChannelDestroy(remoteAddr, channel);
     }
 
+
+
+    //- 当broker和nameserver的长链接断开，会被触发，清理相关的broker信息
     @Override
     public void onChannelIdle(String remoteAddr, Channel channel) {
         this.namesrvController.getRouteInfoManager().onChannelDestroy(remoteAddr, channel);

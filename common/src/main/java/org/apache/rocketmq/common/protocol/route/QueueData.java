@@ -20,11 +20,33 @@
  */
 package org.apache.rocketmq.common.protocol.route;
 
+
+
+/**
+ *
+ * topic 缓存的信息
+ * @author Nero
+ * @date 2020-01-06
+ * *@param: null
+ * @return 
+ */
 public class QueueData implements Comparable<QueueData> {
+
+
+    //- broker名称
     private String brokerName;
+    //- 该broker配置的读队列个数
     private int readQueueNums;
+
+    //- 该broker配置的写队列个数
     private int writeQueueNums;
+
+    //    6：同时支持读写
+    //    4：禁写
+    //    2：禁读
     private int perm;
+
+    //- 同步标示
     private int topicSynFlag;
 
     public int getReadQueueNums() {

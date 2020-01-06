@@ -26,6 +26,9 @@ import org.apache.rocketmq.common.MixAll;
 public class BrokerData implements Comparable<BrokerData> {
     private String cluster;
     private String brokerName;
+
+
+    //- 相同名称的broker可能存在多个机器，一个Master和一个Slave，这个结构存储着broker对应的属性信息
     private HashMap<Long/* brokerId */, String/* broker address */> brokerAddrs;
 
     private final Random random = new Random();
