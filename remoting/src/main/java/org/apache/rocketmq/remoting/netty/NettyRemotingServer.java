@@ -68,7 +68,6 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     private final EventLoopGroup eventLoopGroupSelector;
     private final EventLoopGroup eventLoopGroupBoss;
     private final NettyServerConfig nettyServerConfig;
-
     private final ExecutorService publicExecutor;
     private final ChannelEventListener channelEventListener;
 
@@ -82,9 +81,23 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     private static final String TLS_HANDLER_NAME = "sslHandler";
     private static final String FILE_REGION_ENCODER_NAME = "fileRegionEncoder";
 
+
+
+    /**
+     *
+     * 通过config构造NettyServer
+     * @author Nero
+     * @date 2020-01-06
+     * *@param: nettyServerConfig
+     * @return 
+     */
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig) {
         this(nettyServerConfig, null);
     }
+
+
+
+
 
     public NettyRemotingServer(final NettyServerConfig nettyServerConfig,
         final ChannelEventListener channelEventListener) {
@@ -149,6 +162,10 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
         loadSslContext();
     }
+
+
+
+
 
     public void loadSslContext() {
         TlsMode tlsMode = TlsSystemConfig.tlsMode;
@@ -240,6 +257,12 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
             }
         }, 1000 * 3, 1000);
     }
+
+
+
+
+
+
 
     @Override
     public void shutdown() {
@@ -403,6 +426,10 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
             processMessageReceived(ctx, msg);
         }
     }
+
+
+
+
 
     class NettyConnectManageHandler extends ChannelDuplexHandler {
         @Override

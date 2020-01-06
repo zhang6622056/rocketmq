@@ -902,6 +902,18 @@ public class BrokerController {
         doRegisterBrokerAll(true, false, topicConfigSerializeWrapper);
     }
 
+
+
+    /**
+     *
+     * 向nameserver注册broker，用于broker发现
+     * @author Nero
+     * @date 2020-01-06
+     * @param: checkOrderConfig
+     * @param: oneway
+     * @param: forceRegister
+     * @return void
+     */
     public synchronized void registerBrokerAll(final boolean checkOrderConfig, boolean oneway, boolean forceRegister) {
         TopicConfigSerializeWrapper topicConfigWrapper = this.getTopicConfigManager().buildTopicConfigSerializeWrapper();
 
@@ -926,6 +938,18 @@ public class BrokerController {
         }
     }
 
+
+
+    /***
+     *
+     * 向nameserver注册
+     * @author Nero
+     * @date 2020-01-06
+     * *@param: checkOrderConfig
+     * @param: oneway
+     * @param: topicConfigWrapper
+     * @return void
+     */
     private void doRegisterBrokerAll(boolean checkOrderConfig, boolean oneway,
         TopicConfigSerializeWrapper topicConfigWrapper) {
         List<RegisterBrokerResult> registerBrokerResultList = this.brokerOuterAPI.registerBrokerAll(

@@ -30,6 +30,17 @@ import org.apache.rocketmq.tools.command.CommandUtil;
 import org.apache.rocketmq.tools.command.SubCommand;
 import org.apache.rocketmq.tools.command.SubCommandException;
 
+
+
+
+/***
+ *
+ * 用来创建和更新topic
+ * @author Nero
+ * @date 2020-01-06
+ * *@param: null
+ * @return 
+ */
 public class UpdateTopicSubCommand implements SubCommand {
 
     @Override
@@ -93,6 +104,8 @@ public class UpdateTopicSubCommand implements SubCommand {
         defaultMQAdminExt.setInstanceName(Long.toString(System.currentTimeMillis()));
 
         try {
+
+            //- 默认每个topic，broker对应的读队列和写队列都是8个
             TopicConfig topicConfig = new TopicConfig();
             topicConfig.setReadQueueNums(8);
             topicConfig.setWriteQueueNums(8);
@@ -132,10 +145,15 @@ public class UpdateTopicSubCommand implements SubCommand {
             }
             topicConfig.setOrder(isOrder);
 
+
+
             if (commandLine.hasOption('b')) {
                 String addr = commandLine.getOptionValue('b').trim();
 
+                //- 初始化mqclient相关属性
                 defaultMQAdminExt.start();
+
+                //- 创建topic
                 defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
 
                 if (isOrder) {
@@ -145,6 +163,8 @@ public class UpdateTopicSubCommand implements SubCommand {
                     System.out.printf("%s", String.format("set broker orderConf. isOrder=%s, orderConf=[%s]",
                         isOrder, orderConf.toString()));
                 }
+
+
                 System.out.printf("create topic to %s success.%n", addr);
                 System.out.printf("%s", topicConfig);
                 return;
@@ -157,6 +177,9 @@ public class UpdateTopicSubCommand implements SubCommand {
                 Set<String> masterSet =
                     CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
                 for (String addr : masterSet) {
+
+
+                    //- 创建topic
                     defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
                     System.out.printf("create topic to %s success.%n", addr);
                 }
@@ -171,6 +194,8 @@ public class UpdateTopicSubCommand implements SubCommand {
                             .append(topicConfig.getWriteQueueNums());
                         splitor = ";";
                     }
+
+
                     defaultMQAdminExt.createOrUpdateOrderConf(topicConfig.getTopicName(),
                         orderConf.toString(), true);
                     System.out.printf("set cluster orderConf. isOrder=%s, orderConf=[%s]", isOrder, orderConf);

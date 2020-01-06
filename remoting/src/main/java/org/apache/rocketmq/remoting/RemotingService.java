@@ -17,6 +17,16 @@
 
 package org.apache.rocketmq.remoting;
 
+
+
+/**
+ *
+ * server与client抽象的最上层的处理
+ * @author Nero
+ * @date 2020-01-06
+ * *@param: null
+ * @return 
+ */
 public interface RemotingService {
     void start();
 
