@@ -1,4 +1,4 @@
-package send;
+package simple.send;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.rocketmq.client.exception.MQBrokerException;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class SimpleSend {
     private static final String producerGroup = "GROUP_TEST";
     private static final String testTopic = "TOPIC_TEST";
-
+    private static final String nameServer = "39.105.81.92:9876";
 
 
 
@@ -32,7 +32,7 @@ public class SimpleSend {
      */
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
         DefaultMQProducer defaultMQProducer = new DefaultMQProducer(producerGroup);
-        defaultMQProducer.setNamesrvAddr("39.105.81.92:9876");
+        defaultMQProducer.setNamesrvAddr(nameServer);
         defaultMQProducer.setSendMsgTimeout(100000);
         defaultMQProducer.start();
 
@@ -40,14 +40,18 @@ public class SimpleSend {
         Message message = new Message();
         message.setTopic(testTopic);
 
-        Map<String,String> object = new HashMap<>();
-        object.put("username","nero");
-        object.put("password","123456");
-        message.setBody(JSON.toJSONString(object).getBytes());
 
 
-        SendResult sendResult = defaultMQProducer.send(message);
-        System.out.println(sendResult);
+
+        for (int i = 0 ; i < 100 ; i++){
+            Map<String,String> object = new HashMap<>();
+            object.put("username","nero"+i);
+            object.put("password","123456");
+            message.setBody(JSON.toJSONString(object).getBytes());
+            SendResult sendResult = defaultMQProducer.send(message);
+            System.out.println(sendResult);
+        }
+
         defaultMQProducer.shutdown();
 
     }
